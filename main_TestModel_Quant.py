@@ -1,91 +1,13 @@
 import numpy              as np
 import torch
 import tensorflow         as tf
-import torch.nn           as nn
-from Utilities            import loader_handler as lc
 import matplotlib.pyplot  as plt
-from scipy.stats          import gaussian_kde
-from matplotlib.ticker    import AutoMinorLocator
 import pandas             as pd
-from Architectures.Models import MS_Net,Corrected_MS_Net, DannyKo_Net_Original
-import pyvista            as pv
-from matplotlib.ticker import LogLocator, LogFormatterSciNotation
-from Utilities import dataset_reader as dr
-from torch.utils.data import DataLoader
-from Utilities import nn_trainner as nnt
+from torch.utils.data     import DataLoader
 
-
-#######################################################
-#************ BASELINE MODEL:              ***********#
-#######################################################
-
-# Encapsulate Danny Ko. model
-class Danny_KerasModel(nn.Module):
-    def __init__(self, uni_directional=None):
-        super().__init__() 
-        self.uni_directional = uni_directional
-        if uni_directional == 0:
-            eval_model_name     = 'UnetRS_ModelvZ1-4'
-            path = "../Run_Keras/"+"RandomSphere SubModel/{}/{}.ckpt".format(eval_model_name, eval_model_name)
-            self.model          = tf.keras.models.load_model(
-                 path
-            )
-        elif uni_directional == 1:
-            eval_model_name     = 'UnetRS_ModelvY1-1'
-            path = "../Run_Keras/"+"RandomSphere SubModel/{}/{}.ckpt".format(eval_model_name, eval_model_name)
-            self.model          = tf.keras.models.load_model(
-                 path
-            )
-        elif uni_directional == 2:
-            eval_model_name     = 'UnetRS_ModelvX1-3'
-            path = "../Run_Keras/"+"RandomSphere SubModel/{}/{}.ckpt".format(eval_model_name, eval_model_name)
-            self.model          = tf.keras.models.load_model(
-                 path
-            )
-        else:
-            eval_model_name     = 'UnetRSXYZ_ModelvXYZ1-8'
-            path = "../Run_Keras/"+"RandomSphere FinalModel/{}/{}.ckpt".format(eval_model_name, eval_model_name)
-            self.model          = tf.keras.models.load_model(
-                 path,
-                 custom_objects = {'div_loss2': Danny_KerasModel.div_loss2}
-            )
-        
-    # Inputs: Tensor (B,1,Z=120,Y=120,X=120),where 0's are solids, 1's are pores
-    def predict(self, inputs):
-        # Pytorch (B,C,Z,Y,X) -> Tensorflow (B,Z,Y,X,C)
-        x          = inputs.permute(0,2,3,4,1)   
-        # Use it as boolean numpy
-        x          = x.detach().cpu().numpy()        
-        # Danny works alligned to X
-        x          = np.transpose(x, axes=[0, 3, 2, 1, 4])
-        # Make sure it is binary
-        x          = (x>0).astype(np.float32)
-        # Predict
-        y          = np.float32(self.model.predict(x=[x]))
-        # Rotate alligning to Z
-        y          = np.transpose(y, axes=[0, 3, 2, 1, 4])
-        # Return prediction as Pytorch tensor
-        y          = torch.from_numpy(y)
-        # Tensorflow (B,Z,Y,X,C) -> Pytorch (B,C,Z,Y,X)
-        y          = y.permute(0,4,1,2,3)
-        # Reorder the channels: C=Vx,Vy,Vz to C=Vz,Vy,Vx
-        if self.uni_directional is None:
-            y          = y[:, [2, 1, 0], :, :, :]
-        return y
- 
-    @staticmethod
-    def div_loss2(y_true, y_pred):
-
-        scale         = 3
-        mse           = tf.math.reduce_mean( tf.math.square(y_true - y_pred) )
-        dVxdx_pred    = (y_pred[:,2:,1:-1,1:-1,0] - y_pred[:,:-2,1:-1,1:-1,0])/2
-        dVydy_pred    = (y_pred[:,1:-1,2:,1:-1,1] - y_pred[:,1:-1,:-2,1:-1,1])/2
-        dVzdz_pred    = (y_pred[:,1:-1,1:-1,2:,2] - y_pred[:,1:-1,1:-1,:-2,2])/2
-        div_pred      = dVxdx_pred + dVydy_pred + dVzdz_pred
-        div_loss      = tf.math.reduce_mean( tf.math.abs(div_pred) )
-        loss          = mse + div_loss*scale
-
-        return loss
+from Architectures.Models import Corrected_MS_Net, DannyKo_Net_Original
+from Utilities            import dataset_reader as dr
+from Danny_Original.architecture import Danny_KerasModel
 
 
 #######################################################
@@ -543,22 +465,22 @@ device           = 'cpu'
 datasets        = {
     #"Trainning": "../NN_Datasets/PressureDriven/Train_Danny_120_120_120_PressureWalls.h5",
     
-    "Spherical Pore":   "../NN_Datasets/ForceDriven/Test_SphPore_120_120_120.h5",
-    "Spherical Grain":  "../NN_Datasets/ForceDriven/Test_SphGrain_120_120_120.h5",
-    "Cylindrical Pore": "../NN_Datasets/ForceDriven/Test_CylinPore_120_120_120.h5",
-    "Cylindrical Grain":"../NN_Datasets/ForceDriven/Test_CylinGrain_120_120_120.h5",
+    #"Spherical Pore":   "../NN_Datasets/ForceDriven/Test_SphPore_120_120_120.h5",
+    #"Spherical Grain":  "../NN_Datasets/ForceDriven/Test_SphGrain_120_120_120.h5",
+    #"Cylindrical Pore": "../NN_Datasets/ForceDriven/Test_CylinPore_120_120_120.h5",
+    #"Cylindrical Grain":"../NN_Datasets/ForceDriven/Test_CylinGrain_120_120_120.h5",
     
     "Parker":       "../NN_Datasets/ForceDriven/Test_Oliveira_Parker_120_120_120.h5",
-    "Leopard":      "../NN_Datasets/ForceDriven/Test_Oliveira_Leopard_120_120_120.h5",
-    "Kirby":        "../NN_Datasets/ForceDriven/Test_Oliveira_Kirby_120_120_120.h5",
-    "Castle Gate":  "../NN_Datasets/ForceDriven/Test_Oliveira_CastleGate_120_120_120.h5",
-    "Brown":        "../NN_Datasets/ForceDriven/Test_Oliveira_Brown_120_120_120.h5",
-    "Upper Gray":   "../NN_Datasets/ForceDriven/Test_Oliveira_BereaUpperGray_120_120_120.h5",
-    "Sinter Gray":  "../NN_Datasets/ForceDriven/Test_Oliveira_BereaSinterGray_120_120_120.h5",
-    "Berea Buff":   "../NN_Datasets/ForceDriven/Test_Oliveira_BereaBuff_120_120_120.h5",
-    "Berea":        "../NN_Datasets/ForceDriven/Test_Oliveira_Berea_120_120_120.h5",
-    "Bentheimer":   "../NN_Datasets/ForceDriven/Test_Oliveira_Bentheimer_120_120_120.h5",
-    "Bandera":      "../NN_Datasets/ForceDriven/Test_Oliveira_Bandera_120_120_120.h5",
+    #"Leopard":      "../NN_Datasets/ForceDriven/Test_Oliveira_Leopard_120_120_120.h5",
+    #"Kirby":        "../NN_Datasets/ForceDriven/Test_Oliveira_Kirby_120_120_120.h5",
+    #"Castle Gate":  "../NN_Datasets/ForceDriven/Test_Oliveira_CastleGate_120_120_120.h5",
+    #"Brown":        "../NN_Datasets/ForceDriven/Test_Oliveira_Brown_120_120_120.h5",
+    #"Upper Gray":   "../NN_Datasets/ForceDriven/Test_Oliveira_BereaUpperGray_120_120_120.h5",
+    #"Sinter Gray":  "../NN_Datasets/ForceDriven/Test_Oliveira_BereaSinterGray_120_120_120.h5",
+    #"Berea Buff":   "../NN_Datasets/ForceDriven/Test_Oliveira_BereaBuff_120_120_120.h5",
+    #"Berea":        "../NN_Datasets/ForceDriven/Test_Oliveira_Berea_120_120_120.h5",
+    #"Bentheimer":   "../NN_Datasets/ForceDriven/Test_Oliveira_Bentheimer_120_120_120.h5",
+    #"Bandera":      "../NN_Datasets/ForceDriven/Test_Oliveira_Bandera_120_120_120.h5",
     }
 
 
@@ -568,17 +490,17 @@ models          = {}
 if directional==0:
     
     # Baseline model
-    #print("\nLoading Danny Ko (Baseline)...")
-    #baseline_model  = Danny_KerasModel(uni_directional=0)
-    #print_n_params(baseline_model.model, pytorch=False)
-    #models["Baseline Danny (Ke) - Danny Data"] = baseline_model
+    print("\nLoading Danny Ko (Baseline)...")
+    baseline_model  = Danny_KerasModel(uni_directional=0)
+    print_n_params(baseline_model.model, pytorch=False)
+    models["Baseline Danny (Ke) - Danny Data"] = baseline_model
     
 
     # DATASETS COMPARISON
     """
     model_aux       = DannyKo_Net_Original()
     danny_model     = model_aux.z_model
-    model_full_name = "/home/gabriel/remote/hal/dissertacao/NN_Results/NN_Trainning_13_March_2026_02-11PM_Job16070/model_LowerValidationLoss.pth"
+    model_full_name = "./Trained_Models/NN_Trainning_13_March_2026_02-11PM_Job16070/model_LowerValidationLoss.pth"
     danny_model.load_state_dict(torch.load(model_full_name, map_location=torch.device('cpu'), weights_only=True))
     danny_model.eval()
     danny_model.bin_input = True
@@ -587,7 +509,7 @@ if directional==0:
     
     model_aux       = DannyKo_Net_Original()
     danny_model     = model_aux.z_model
-    model_full_name = "/home/gabriel/remote/hal/dissertacao/NN_Results/NN_Trainning_13_March_2026_02-13PM_Job16071/model_LowerValidationLoss.pth"
+    model_full_name = "./Trained_Models/NN_Trainning_13_March_2026_02-13PM_Job16071/model_LowerValidationLoss.pth"
     danny_model.load_state_dict(torch.load(model_full_name, map_location=torch.device('cpu'), weights_only=True))
     danny_model.eval()
     danny_model.bin_input = True
@@ -596,7 +518,7 @@ if directional==0:
     
     model_aux       = DannyKo_Net_Original()
     danny_model     = model_aux.z_model
-    model_full_name = "/home/gabriel/remote/hal/dissertacao/NN_Results/NN_Trainning_15_March_2026_03-30PM_Job16205/model_LowerValidationLoss.pth"
+    model_full_name = "./Trained_Models/NN_Trainning_15_March_2026_03-30PM_Job16205/model_LowerValidationLoss.pth"
     danny_model.load_state_dict(torch.load(model_full_name, map_location=torch.device('cpu'), weights_only=True))
     danny_model.eval()
     danny_model.bin_input = True
@@ -605,7 +527,7 @@ if directional==0:
     
     model_aux       = DannyKo_Net_Original()
     danny_model     = model_aux.z_model
-    model_full_name = "/home/gabriel/remote/hal/dissertacao/NN_Results/NN_Trainning_13_March_2026_02-16PM_Job16074/model_LowerValidationLoss.pth"
+    model_full_name = "./Trained_Models/NN_Trainning_13_March_2026_02-16PM_Job16074/model_LowerValidationLoss.pth"
     danny_model.load_state_dict(torch.load(model_full_name, map_location=torch.device('cpu'), weights_only=True))
     danny_model.eval()
     danny_model.bin_input = True
@@ -617,7 +539,7 @@ if directional==0:
     # ARCHITECTURES COMPARISON
     model_aux       = DannyKo_Net_Original()
     danny_model     = model_aux.z_model
-    model_full_name = "/home/gabriel/remote/hal/dissertacao/NN_Results/NN_Trainning_13_March_2026_02-16PM_Job16074/model_LowerValidationLoss.pth"
+    model_full_name = "./Trained_Models/NN_Trainning_13_March_2026_02-16PM_Job16074/model_LowerValidationLoss.pth"
     danny_model.load_state_dict(torch.load(model_full_name, map_location=torch.device('cpu'), weights_only=True))
     danny_model.eval()
     danny_model.bin_input = True
@@ -625,7 +547,7 @@ if directional==0:
     print_n_params(danny_model, pytorch=True)
 
     javier_model = Corrected_MS_Net()
-    model_full_name = "/home/gabriel/remote/hal/dissertacao/NN_Results/NN_Trainning_14_March_2026_10-52PM_Job16201/model_LowerValidationLoss.pth"
+    model_full_name = "./Trained_Models/NN_Trainning_14_March_2026_10-52PM_Job16201/model_LowerValidationLoss.pth"
     javier_model.load_state_dict(torch.load(model_full_name, map_location=torch.device('cpu'), weights_only=True))
     javier_model.eval()
     javier_model.bin_input = False
@@ -634,7 +556,7 @@ if directional==0:
 
     model_aux       = DannyKo_Net_Original()
     danny_model     = model_aux.z_model
-    model_full_name = "/home/gabriel/remote/hal/dissertacao/NN_Results/NN_Trainning_16_March_2026_12-08PM_Job16226/model_LowerValidationLoss.pth"
+    model_full_name = "./Trained_Models/NN_Trainning_16_March_2026_12-08PM_Job16226/model_LowerValidationLoss.pth"
     danny_model.load_state_dict(torch.load(model_full_name, map_location=torch.device('cpu'), weights_only=True))
     danny_model.eval()
     danny_model.bin_input = True

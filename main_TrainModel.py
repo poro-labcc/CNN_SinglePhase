@@ -1,11 +1,9 @@
 import torch.nn as nn
 import json
 import torch
-import os
 import numpy as np
 from torch.utils.data import DataLoader
 
-from Utilities import loader_handler as lc
 from Utilities import loss_functions as lf
 from Utilities import nn_trainner as nnt
 from Utilities import model_handler as mh
@@ -22,19 +20,19 @@ binary_input            = True
 
 # Data aspects
 NN_dataset_folder       = "../NN_Datasets/"
-dataset_train_name      = "Train_Danny_120_120_120_PressureWalls.h5" #"train_danny_dataset.h5" #"Train_Deepore_256_256_256_dataset.h5"
-dataset_valid_name      = "Train_Danny_120_120_120_PressureWalls.h5" #"val_danny_dataset.h5"   #"Train_Deepore_256_256_256_dataset.h5"
-train_range             = (0,8)  #(0,7)  #(0,216) 
-valid_range             = (8,9)  #(7,9)  #(216,216+26)
+dataset_train_name      = "PressureDriven/Train_Danny_120_120_120_Pressure.h5" 
+dataset_valid_name      = "PressureDriven/Train_Danny_120_120_120_Pressure.h5" 
+train_range             = (0,8)  # Not Augmented: (0,7); Augmented (0,216) 
+valid_range             = (8,9)  # Not Augmented: (7,9); Augmented (216,216+26)
 batch_size              = 8      # Group size of train samples that influence one update on weights
 num_workers             = 4      # How many python process to load next batch's data
 num_threads             = 18     # How many cpu parallel computations
 
 # Learning aspects
-N_epochs                = 100#30*1000       # Number of times that all the samples are visited
-partial_epochs          = 100 #30*300
-patience                = 5
-learning_rate           = 0.0006    # Originally: Javier=0.001, 
+N_epochs                = 10     # Not Augmented: 30000; Augmented 1000
+partial_epochs          = 10     # Not Augmented: 30000; Augmented 1000
+patience                = 5      # Not Augmented: 6000;  Augmented 200
+learning_rate           = 0.0006    
 loss_functions  = {
     # Optimization Loss Functions:          "Thresholded" = False, to evaluate the outputs 
     "MSE":              {"obj": nn.MSELoss(),                        "Thresholded": False},
@@ -51,7 +49,7 @@ weight_init             = None        # One of: 'He', 'Xavier' or None (Default)
 device                  = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 seed                    = 42
 dtype                   = torch.float32
-train_comment           = "Testando dataset Danny simulado." # Exemplo: "Arq javier, dados danny Z. OBJ: Inicializacao ajudou?"
+train_comment           = "Helpful comment" # Exemplo: "Arq javier, dada from danny Z. OBJ: Did it converge?"
 
 
 
