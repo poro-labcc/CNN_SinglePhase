@@ -12,48 +12,11 @@ This repository provides a PyTorch-based training pipeline for developing deep l
 # Training Process
 
 
-## Usage and Execution
-
-The training pipeline is controlled via command-line arguments and reads hyperparameters from structured `.json` configuration files.
-
-### 1. Standard Training
-
-To start a new training process, provide a JSON configuration file.  
-If no file is specified, the script defaults to `config.json` in the root directory.
-
-**Example:**
-```bash
-python main_TrainModel.py --config experiment_01.json
-```
-
----
-
-### 2. Resuming an Experiment
-
-To resume a previous training session or reproduce an experiment, provide the target results directory.  
-
-This feature is particularly useful for:
-- Splitting long training runs into multiple executions  
-- Protecting against system interruptions or crashes  
-- Implementing curriculum learning strategies  
-
-The script automatically loads the `metadata.json` generated during the original run and ignores any `--config` file.
-
-**Example:**
-```bash
-python main_TrainModel.py --folder ../NN_Results/NN_Trainning_23_March_2026_01-46PM
-```
-
----
-
 ## Configuration Parameters
 
 The `config.json` file controls all aspects of the model, dataset handling, and training process.
 
-### General Structure
-
 ```json
-{
     "model_name": "danny_z",
     "binary_input": true,
     "NN_dataset_folder": "../NN_Datasets/",
@@ -74,7 +37,6 @@ The `config.json` file controls all aspects of the model, dataset handling, and 
     "weight_init": null,
     "seed": 42,
     "train_comment": "Description of the current experiment."
-}
 ```
 
 ---
