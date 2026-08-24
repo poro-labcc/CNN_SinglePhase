@@ -10,8 +10,9 @@ import random
 import copy
 import torch.nn          as nn
 import os
-from   Utilities           import usage_metrics as um
-
+from   Utilities         import usage_metrics as um
+import sys
+from   typing            import Optional
 
 def full_train(model, 
                train_batch_loader,
@@ -119,13 +120,14 @@ def partial_train(model,
                loss_functions,
                earlyStopping_loss,
                backPropagation_loss,
-               optimizer,
-               partial_epochs       = 100,
-               N_epochs             = 1000,
+               optimizer,                
                scheduler            = None,
-               results_folder       = "",
-               device               = "cpu",
-               patience             = None,
+               partial_epochs:int   = 100,
+               N_epochs:int         = 1000,
+               results_folder:str   = "",
+               device:str           = "cpu",
+               patience:Optional[int] = None,
+               tolerance:Optional[int] = None,
                dtype                = torch.float32):
     
     # Check the presence of 'predict' method
@@ -143,12 +145,13 @@ def partial_train(model,
     last_update, start_epoch, train_costs_h, val_costs_h, best_valid_loss = resume_checkpoint(results_folder, 
                                                                                               model, optimizer, 
                                                                                               scheduler, device)
-        
+    
     average_computation = 0
     train_avg_loss      = {}  
     valid_avg_loss      = {}
     best_model          = None
-    if patience is None: patience = N_epochs
+    if patience is None:  patience  = N_epochs # Wait until the end
+    if tolerance is None: tolerance = 0        # If current loss is lower than the best
 
     # Create a directory and file name for model
     weights_file_name   = results_folder+"model"
@@ -184,7 +187,6 @@ def partial_train(model,
                                               dtype         = dtype
                                         )
         
-        
         # Tracking performance
         train_costs_h.append(train_avg_loss)
         val_costs_h.append(valid_avg_loss)
@@ -194,12 +196,12 @@ def partial_train(model,
         
 
         # Save tracking based on best performance
-        if valid_avg_loss[earlyStopping_loss] < best_valid_loss:
-            percent         = round((1-(valid_avg_loss[earlyStopping_loss] / best_valid_loss)) * 100, 2)
+        improvement_pct = (1 - valid_avg_loss[earlyStopping_loss] / best_valid_loss)  * 100
+        if improvement_pct > tolerance:
             last_update     = epoch_index
             best_valid_loss = valid_avg_loss[earlyStopping_loss]
             best_model      = copy.deepcopy(model.state_dict())
-            print(f"--> New best solution for Validation dataset achieved at {epoch_index} / {N_epochs}: {best_valid_loss} ({percent:.6f}% better)")
+            print(f"--> New best solution for Validation dataset achieved at {epoch_index} / {N_epochs}: {best_valid_loss} ({improvement_pct:.6f}% better)")
             atomic_torch_save(best_model, best_model_path)
             
         
@@ -291,7 +293,7 @@ def train_one_epoch(model, train_batch_loader, loss_function, optimizer, schedul
             
         
         
-    if scheduler is not None: scheduler.step() # Realiza um passo no learning rate
+    if scheduler is not None: scheduler.step() # Make one step in optimizer scheluding
 
     return  model
 
@@ -403,13 +405,13 @@ def init_weights_zeros(m):
                      nn.ConvTranspose1d, nn.ConvTranspose2d, nn.ConvTranspose3d)):
         nn.init.zeros_(m.weight)
         if m.bias is not None:
-            nn.init.ones_(m.bias)
+            nn.init.zeros_(m.bias)
             
     # Linear layers: zero weights and bias  
     elif isinstance(m, nn.Linear):
         nn.init.zeros_(m.weight)
         if m.bias is not None:
-            nn.init.ones_(m.bias)
+            nn.init.zeros_(m.bias)
             
     # Normalization layers: keep defaults (ones for weight, zeros for bias)
     elif isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d,
@@ -471,11 +473,39 @@ def init_weights_he(m):
             nn.init.zeros_(m.bias)
 
 
+
+def init_weights_normal(m):
     
+    std = 0.01
+    
+    # Aplica a distribuição normal apenas nas camadas convolucionais
+    if isinstance(m, (nn.Conv1d, nn.Conv2d, nn.Conv3d, 
+                      nn.ConvTranspose1d, nn.ConvTranspose2d, nn.ConvTranspose3d)):
+        nn.init.normal_(m.weight, mean=0.0, std=std)
+        if m.bias is not None:
+            nn.init.zeros_(m.bias)
+            
+    # Mantém a inicialização padrão para as camadas de normalização (gamma=1, beta=0)
+    elif isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d,
+                        nn.LayerNorm, nn.GroupNorm, nn.InstanceNorm1d,
+                        nn.InstanceNorm2d, nn.InstanceNorm3d)):
+        if m.weight is not None:
+            nn.init.ones_(m.weight)
+        if m.bias is not None:
+            nn.init.zeros_(m.bias)
+            
+    return init_weights_normal
+
 #######################################################
 #****************** AUXILIARY FUNCTIONS **************#
 #######################################################
 
+def freeze_on_training(models: list):
+    for sub_model in models :
+        sub_model.eval()                               # Disable Dropout and others
+        for param in sub_model.parameters():
+            param.requires_grad = False                # Do not use on gradient
+            
 # Move tensors to device
 # If obj is a list, move each element to device
 def move_to_device(obj, device, dtype):
@@ -621,6 +651,23 @@ def set_global_seed(seed: int, deterministic_strict: bool = False):
     print(f"Global seed set to {seed}")
 
 
+def set_logger_output_folder(base_dir: str):
+    class Logger(object):
+        def __init__(self, filename="Default.log"):
+            self.terminal = sys.stdout
+            self.log = open(filename, "a", encoding='utf-8')
+
+        def write(self, message):
+            self.terminal.write(message) 
+            self.log.write(message)      
+
+        def flush(self):
+            self.terminal.flush()
+            self.log.flush()
+            
+    sys.stdout = Logger(os.path.join(base_dir, "output.txt"))
+    sys.stderr = sys.stdout
+
 def create_training_data_folder(base_dir: str = None):
     # Use current working directory if base_dir not provided
     if base_dir is None:
@@ -661,73 +708,28 @@ def create_training_data_folder(base_dir: str = None):
         return None
     
     
+def save_metadata(config, 
+                  loss_functions):
+    NN_results_folder   = config["NN_results_folder"]
+    print(NN_results_folder)
+    metadata_file       = os.path.join(NN_results_folder, "metadata.json")
     
+    # 1. Faz uma cópia do config original lido do input
+    metadata_dict = config.copy()
     
-def save_metadata(model_name, 
-                  NN_dataset_folder,
-                  dataset_train_name,
-                  dataset_valid_name,
-                  batch_size,
-                  N_epochs,
-                  patience,
-                  learning_rate,
-                  optimizer,
-                  weight_init,
-                  binary_input,
-                  earlyStopping_loss,
-                  backPropagation_loss,
-                  loss_functions,
-                  NN_results_folder,
-                  NN_model_weights_folder,
-                  model_full_name,
-                  dataset_train_full_name,
-                  dataset_valid_full_name,
-                  train_comment
-                  ):
+    # 2. Converte as loss functions (que contêm objetos PyTorch) em texto
+    processed_losses = {
+        k: {"Thresholded": v["Thresholded"], "obj": str(v["obj"])} 
+        for k, v in loss_functions.items()
+    }
     
-    # Defina o caminho onde o arquivo será salvo
-    metadata_file = os.path.join(NN_results_folder, "metadata.txt")
+    # 3. Adiciona as informações geradas pelo script ao dicionário plano
+    metadata_dict["loss_functions"]          = processed_losses
     
-    # Monte o conteúdo do metadata
-    metadata_content = f"""
-    ================= TRAINING METADATA =================
-    
-    Model Aspects:
-    - model_name:           {model_name}
-    - model weigth init:    {weight_init}
-    - binary input:         {binary_input}
-    
-    Data Aspects:
-    - NN_dataset_folder:    {NN_dataset_folder}
-    - dataset_train_name:   {dataset_train_name}
-    - dataset_valid_name:   {dataset_valid_name}
-    - batch_size:           {batch_size}
-    
-    Learning Aspects:
-    - N_epochs:             {N_epochs}
-    - patience:             {patience}
-    - learning_rate:        {learning_rate}
-    - optimizer:            {optimizer}
-    - earlyStopping_loss:   {earlyStopping_loss}
-    - backPropagation_loss: {backPropagation_loss}
-    
-    Loss Functions:
-    {json.dumps({k: {"Thresholded": v["Thresholded"], "obj": str(v["obj"])} for k,v in loss_functions.items()}, indent=4)}
-    
-    Paths:
-    - NN_results_folder:        {NN_results_folder}
-    - NN_model_weights_folder:  {NN_model_weights_folder}
-    - model_full_name:          {model_full_name}
-    - dataset_train_full_name:  {dataset_train_full_name}
-    - dataset_valid_full_name:  {dataset_valid_full_name}
-    
-    ======================================================
-    
-    """+train_comment
-    
-    # Escreve no txt
+    # 4. Cria a pasta caso ela não exista e salva o JSON plano
+    os.makedirs(NN_results_folder, exist_ok=True)
     with open(metadata_file, "w") as f:
-        f.write(metadata_content)
+        json.dump(metadata_dict, f, indent=4)
         
     return metadata_file
 

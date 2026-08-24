@@ -1,0 +1,87 @@
+[*] Loading configs from standard config file: exp/Etapa_0_DM_SA_DN_javier_z.json
+Global seed set to 42
+Current device:      cuda
+
+
+Configurations:
+{
+    "model_name": "danny_z",
+    "binary_input": true,
+    "NN_dataset_folder": "../NN_Datasets_Grad/",
+    "dataset_train_name": [
+        "Train_Danny_SphPore_DAug_DNorm.h5"
+    ],
+    "dataset_valid_name": [
+        "Valid_Danny_SphPore_DAug_DNorm.h5"
+    ],
+    "train_range": null,
+    "valid_range": null,
+    "batch_size": 8,
+    "num_workers": 4,
+    "num_threads": null,
+    "device": "cuda",
+    "N_epochs": 1000,
+    "partial_epochs": 1000,
+    "patience": 200,
+    "tolerance": null,
+    "learning_rate": 0.0006,
+    "earlyStopping_loss": "MSE",
+    "backPropagation_loss": "MSE",
+    "optimizer": "ADAM",
+    "weight_init": null,
+    "seed": 42,
+    "train_comment": "Retreinando Danny Ko qualificacao, mas agora com grad-lbm",
+    "NN_results_folder": "/home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_13_July_2026_06-25PM_Job26286/"
+}
+
+
+/home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_13_July_2026_06-25PM_Job26286/
+Metadata saved at: /home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_13_July_2026_06-25PM_Job26286/metadata.json
+Loading Training Data ... 
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 150 samples from ../NN_Datasets_Grad/Train_Danny_SphPore_DAug_DNorm.h5.
+  self._validate_file()
+  - 150 samples considered.
+Loading Validation Data ... 
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 60 samples from ../NN_Datasets_Grad/Valid_Danny_SphPore_DAug_DNorm.h5.
+  self._validate_file()
+  - 60 samples considered.
+Loading Model ... 
+Model size: 4.943MB
+Model size: 1294781 total parameters
+Model size: 1294781 trainable parameters
+Model size: 0 frozen parameters
+
+Starting Train on cuda... 
+
+No previous checkpoints found in /home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_13_July_2026_06-25PM_Job26286/
+
+
+Trainning session has started.
+
+--> New best solution for Validation dataset achieved at 0 / 1000: 1.8506332039833069 (100.000000% better)
+
+Executing epoch 0 / 1000 (0.0%)
+--> Average epoch processing time (seconds):  212.876098
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   1.817305   | 1.850633  
+MSE in Void Space     1.923524   | 1.982982  
+Bias Error            251.524480 | 288.831945
+Pearson Correlation   0.228042   | 0.231772  
+--> New best solution for Validation dataset achieved at 3 / 1000: 1.2692578434944153 (31.414943% better)
+--> New best solution for Validation dataset achieved at 4 / 1000: 0.5500170141458511 (56.666251% better)
+--> New best solution for Validation dataset achieved at 6 / 1000: 0.20660837553441525 (62.436003% better)
+
+Executing epoch 10 / 1000 (1.0%)
+--> Average epoch processing time (seconds):  43.547158
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   0.594444   | 0.599387  
+MSE in Void Space     0.771659   | 0.794407  
+Bias Error            152.810017 | 171.246193
+Pearson Correlation   0.828680   | 0.807757  
+--> New best solution for Validation dataset achieved at 11 / 1000: 0.13384638354182243 (35.217349% better)
+--> New best solution for Validation dataset achieved at 14 / 1000: 0.050558272283524275 (62.226643% better)
+--> New best solution for Validation dataset achieved at 17 / 1000: 0.03942236746661365 (22.025881% better)

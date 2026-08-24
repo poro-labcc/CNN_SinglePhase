@@ -1,0 +1,680 @@
+[*] Loading configs from standard config file: exp/Etapa_3_DM_SA_DN_javier_z.json
+Global seed set to 42
+Current device:      cuda
+
+
+Configurations:
+{
+    "model_name": "javier_z",
+    "binary_input": false,
+    "NN_dataset_folder": "../NN_Datasets_Grad/",
+    "dataset_train_name": [
+        "Train_Silveira_SphPore_SAug_DNorm.h5",
+        "Train_Silveira_SphGrain_SAug_DNorm.h5",
+        "Train_Oliveira_Leopard_SAug_DNorm.h5",
+        "Train_Oliveira_CastleGate_SAug_DNorm.h5",
+        "Train_Oliveira_BereaUpperGray_SAug_DNorm.h5",
+        "Train_Oliveira_BereaSinterGray_SAug_DNorm.h5",
+        "Train_Oliveira_BereaBuff_SAug_DNorm.h5",
+        "Train_Oliveira_Berea_SAug_DNorm.h5",
+        "Train_Oliveira_Bentheimer_SAug_DNorm.h5"
+    ],
+    "dataset_valid_name": [
+        "Valid_Silveira_SphPore_SAug_DNorm.h5",
+        "Valid_Silveira_SphGrain_SAug_DNorm.h5",
+        "Valid_Oliveira_Leopard_SAug_DNorm.h5",
+        "Valid_Oliveira_CastleGate_SAug_DNorm.h5",
+        "Valid_Oliveira_BereaUpperGray_SAug_DNorm.h5",
+        "Valid_Oliveira_BereaSinterGray_SAug_DNorm.h5",
+        "Valid_Oliveira_BereaBuff_SAug_DNorm.h5",
+        "Valid_Oliveira_Berea_SAug_DNorm.h5",
+        "Valid_Oliveira_Bentheimer_SAug_DNorm.h5"
+    ],
+    "train_range": null,
+    "valid_range": null,
+    "batch_size": 8,
+    "num_workers": 4,
+    "num_threads": null,
+    "device": "cuda",
+    "N_epochs": 1000,
+    "partial_epochs": 1000,
+    "patience": 200,
+    "tolerance": null,
+    "learning_rate": 0.0006,
+    "earlyStopping_loss": "MSE",
+    "backPropagation_loss": "MSE",
+    "optimizer": "ADAM",
+    "weight_init": null,
+    "seed": 42,
+    "train_comment": "Teste de multiplos datasets.",
+    "NN_results_folder": "/home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_14_July_2026_06-24PM_Job26315/"
+}
+
+
+/home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_14_July_2026_06-24PM_Job26315/
+Metadata saved at: /home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_14_July_2026_06-24PM_Job26315/metadata.json
+Loading Training Data ... 
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 640 samples from ../NN_Datasets_Grad/Train_Silveira_SphPore_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 640 samples from ../NN_Datasets_Grad/Train_Silveira_SphGrain_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 100 samples from ../NN_Datasets_Grad/Train_Oliveira_Leopard_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 104 samples from ../NN_Datasets_Grad/Train_Oliveira_CastleGate_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 80 samples from ../NN_Datasets_Grad/Train_Oliveira_BereaUpperGray_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 72 samples from ../NN_Datasets_Grad/Train_Oliveira_BereaSinterGray_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 76 samples from ../NN_Datasets_Grad/Train_Oliveira_BereaBuff_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 80 samples from ../NN_Datasets_Grad/Train_Oliveira_Berea_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 152 samples from ../NN_Datasets_Grad/Train_Oliveira_Bentheimer_SAug_DNorm.h5.
+  self._validate_file()
+  - 1944 samples considered.
+Loading Validation Data ... 
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 64 samples from ../NN_Datasets_Grad/Valid_Silveira_SphPore_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 64 samples from ../NN_Datasets_Grad/Valid_Silveira_SphGrain_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 48 samples from ../NN_Datasets_Grad/Valid_Oliveira_Leopard_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 52 samples from ../NN_Datasets_Grad/Valid_Oliveira_CastleGate_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 44 samples from ../NN_Datasets_Grad/Valid_Oliveira_BereaUpperGray_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 32 samples from ../NN_Datasets_Grad/Valid_Oliveira_BereaSinterGray_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 36 samples from ../NN_Datasets_Grad/Valid_Oliveira_BereaBuff_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 40 samples from ../NN_Datasets_Grad/Valid_Oliveira_Berea_SAug_DNorm.h5.
+  self._validate_file()
+/home/gabriel.silveira/dissertacao/CNN_SinglePhase/Utilities/dataset_reader.py:121: UserWarning: Number of samples not provided.The dataset will consider 80 samples from ../NN_Datasets_Grad/Valid_Oliveira_Bentheimer_SAug_DNorm.h5.
+  self._validate_file()
+  - 460 samples considered.
+Loading Model ... 
+Number of Filters:  [128, 32, 8, 2]
+Number of Filters:  [128, 32, 8, 2]
+Number of Filters:  [128, 32, 8, 2]
+Number of Filters:  [128, 32, 8, 2]
+Number of Filters:  [128, 32, 8, 2]
+Model size: 7.226MB
+Model size: 1894156 total parameters
+Model size: 1894156 trainable parameters
+Model size: 0 frozen parameters
+
+Starting Train on cuda... 
+
+No previous checkpoints found in /home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_14_July_2026_06-24PM_Job26315/
+
+
+Trainning session has started.
+
+--> New best solution for Validation dataset achieved at 0 / 1000: 11365.448404509445 (100.000000% better)
+
+Executing epoch 0 / 1000 (0.0%)
+--> Average epoch processing time (seconds):  122.527444
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   5899.490352 | 11365.448405
+MSE in Void Space     1.169908   | 1.163469  
+Bias Error            407.090784 | 593.154307
+Pearson Correlation   0.004391   | 0.005334  
+--> New best solution for Validation dataset achieved at 1 / 1000: 7441.786848857485 (34.522717% better)
+--> New best solution for Validation dataset achieved at 3 / 1000: 4219.048061831244 (43.305981% better)
+--> New best solution for Validation dataset achieved at 4 / 1000: 3735.8103994172193 (11.453713% better)
+--> New best solution for Validation dataset achieved at 5 / 1000: 3305.537889809444 (11.517515% better)
+--> New best solution for Validation dataset achieved at 7 / 1000: 2549.17768011422 (22.881608% better)
+--> New best solution for Validation dataset achieved at 8 / 1000: 2186.243739950246 (14.237295% better)
+--> New best solution for Validation dataset achieved at 9 / 1000: 1905.0035680573562 (12.864081% better)
+
+Executing epoch 10 / 1000 (1.0%)
+--> Average epoch processing time (seconds):  120.95282
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   4432.490898 | 9887.546822
+MSE in Void Space     0.586165   | 0.566975  
+Bias Error            268.474606 | 358.480249
+Pearson Correlation   -0.049126  | -0.042083 
+--> New best solution for Validation dataset achieved at 14 / 1000: 940.1713333458736 (50.647267% better)
+--> New best solution for Validation dataset achieved at 19 / 1000: 454.2556831425634 (51.683734% better)
+--> New best solution for Validation dataset achieved at 20 / 1000: 336.6525769562557 (25.889188% better)
+
+Executing epoch 20 / 1000 (2.0%)
+--> Average epoch processing time (seconds):  121.016512
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   163.160278 | 336.652577
+MSE in Void Space     0.209255   | 0.131373  
+Bias Error            153.285306 | 183.716528
+Pearson Correlation   0.017756   | -0.006550 
+--> New best solution for Validation dataset achieved at 26 / 1000: 137.01222618694962 (59.301596% better)
+--> New best solution for Validation dataset achieved at 27 / 1000: 73.12373460572341 (46.629774% better)
+
+Executing epoch 30 / 1000 (3.0%)
+--> Average epoch processing time (seconds):  120.991728
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   6992.503947 | 16393.993291
+MSE in Void Space     1.289281   | 1.440285  
+Bias Error            163.271654 | 217.378614
+Pearson Correlation   -0.056361  | -0.045501 
+--> New best solution for Validation dataset achieved at 35 / 1000: 59.55468409636925 (18.556288% better)
+--> New best solution for Validation dataset achieved at 36 / 1000: 43.33940805237869 (27.227541% better)
+--> New best solution for Validation dataset achieved at 37 / 1000: 32.70567933444319 (24.535934% better)
+
+Executing epoch 40 / 1000 (4.0%)
+--> Average epoch processing time (seconds):  121.02649
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   104.535113 | 227.704357
+MSE in Void Space     0.148395   | 0.088273  
+Bias Error            87.882333  | 80.715638 
+Pearson Correlation   0.062428   | 0.064657  
+--> New best solution for Validation dataset achieved at 48 / 1000: 31.07717510749554 (4.979270% better)
+
+Executing epoch 50 / 1000 (5.0%)
+--> Average epoch processing time (seconds):  121.028356
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   913.304872 | 1813.083804
+MSE in Void Space     0.176294   | 0.113975  
+Bias Error            89.716179  | 85.318082 
+Pearson Correlation   0.009872   | 0.016207  
+
+Executing epoch 60 / 1000 (6.0%)
+--> Average epoch processing time (seconds):  121.0047
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   1757.645010 | 3919.188810
+MSE in Void Space     0.337881   | 0.351817  
+Bias Error            43.085662  | 81.637927 
+Pearson Correlation   0.138282   | 0.097510  
+
+Executing epoch 70 / 1000 (7.0%)
+--> Average epoch processing time (seconds):  120.989189
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   234.173016 | 510.890733
+MSE in Void Space     0.207948   | 0.137767  
+Bias Error            134.668810 | 175.815203
+Pearson Correlation   -0.186530  | -0.166368 
+
+Executing epoch 80 / 1000 (8.0%)
+--> Average epoch processing time (seconds):  120.96361
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   22.256588  | 36.279314 
+MSE in Void Space     0.149714   | 0.084311  
+Bias Error            98.930253  | 97.124235 
+Pearson Correlation   -0.134593  | -0.085850 
+
+Executing epoch 90 / 1000 (9.0%)
+--> Average epoch processing time (seconds):  120.918327
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   993.665649 | 2080.754400
+MSE in Void Space     0.261203   | 0.245502  
+Bias Error            59.914756  | 38.061680 
+Pearson Correlation   0.113520   | 0.087750  
+--> New best solution for Validation dataset achieved at 92 / 1000: 28.665806137282274 (7.759293% better)
+--> New best solution for Validation dataset achieved at 96 / 1000: 28.254394169511468 (1.435201% better)
+
+Executing epoch 100 / 1000 (10.0%)
+--> Average epoch processing time (seconds):  120.927374
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   504.109150 | 1070.440846
+MSE in Void Space     0.274460   | 0.198235  
+Bias Error            167.550348 | 228.121503
+Pearson Correlation   -0.221637  | -0.185791 
+
+Executing epoch 110 / 1000 (11.0%)
+--> Average epoch processing time (seconds):  120.898791
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   241.872365 | 479.748476
+MSE in Void Space     0.155026   | 0.092707  
+Bias Error            93.117432  | 82.170609 
+Pearson Correlation   0.019592   | 0.013262  
+
+Executing epoch 120 / 1000 (12.0%)
+--> Average epoch processing time (seconds):  120.898325
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   219.730076 | 436.625402
+MSE in Void Space     0.153264   | 0.088830  
+Bias Error            98.135243  | 93.477356 
+Pearson Correlation   -0.058646  | -0.050305 
+--> New best solution for Validation dataset achieved at 122 / 1000: 23.597991746047448 (16.480277% better)
+
+Executing epoch 130 / 1000 (13.0%)
+--> Average epoch processing time (seconds):  120.897331
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   42.922445  | 80.230425 
+MSE in Void Space     0.145662   | 0.081789  
+Bias Error            103.229528 | 107.054052
+Pearson Correlation   0.095898   | 0.106809  
+--> New best solution for Validation dataset achieved at 134 / 1000: 23.450213115790795 (0.626234% better)
+
+Executing epoch 140 / 1000 (14.0%)
+--> Average epoch processing time (seconds):  120.908462
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   19.418141  | 29.978505 
+MSE in Void Space     0.133402   | 0.072008  
+Bias Error            88.085941  | 79.948442 
+Pearson Correlation   0.194589   | 0.173080  
+
+Executing epoch 150 / 1000 (15.0%)
+--> Average epoch processing time (seconds):  120.933713
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   65.917286  | 118.888518
+MSE in Void Space     0.143037   | 0.081103  
+Bias Error            93.685062  | 87.000156 
+Pearson Correlation   0.042458   | 0.031065  
+
+Executing epoch 160 / 1000 (16.0%)
+--> Average epoch processing time (seconds):  120.93435
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   100.852487 | 216.301165
+MSE in Void Space     0.153785   | 0.090614  
+Bias Error            106.518026 | 110.260169
+Pearson Correlation   0.064633   | 0.058465  
+--> New best solution for Validation dataset achieved at 161 / 1000: 19.07542734310545 (18.655633% better)
+
+Executing epoch 170 / 1000 (17.0%)
+--> Average epoch processing time (seconds):  121.394495
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   53.877584  | 102.793445
+MSE in Void Space     0.142996   | 0.079551  
+Bias Error            94.732843  | 89.930187 
+Pearson Correlation   0.008892   | 0.007809  
+
+Executing epoch 180 / 1000 (18.0%)
+--> Average epoch processing time (seconds):  121.764409
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   77.888618  | 163.288060
+MSE in Void Space     0.136749   | 0.076811  
+Bias Error            88.154512  | 79.109738 
+Pearson Correlation   0.089830   | 0.080014  
+--> New best solution for Validation dataset achieved at 184 / 1000: 18.04339977379503 (5.410246% better)
+
+Executing epoch 190 / 1000 (19.0%)
+--> Average epoch processing time (seconds):  121.702356
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   127.345350 | 283.095600
+MSE in Void Space     0.146902   | 0.082332  
+Bias Error            92.783557  | 89.325780 
+Pearson Correlation   0.008400   | 0.008129  
+
+Executing epoch 200 / 1000 (20.0%)
+--> Average epoch processing time (seconds):  121.65578
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   661.332936 | 1457.380224
+MSE in Void Space     0.194952   | 0.124046  
+Bias Error            85.109879  | 73.775840 
+Pearson Correlation   0.025301   | 0.023717  
+
+Executing epoch 210 / 1000 (21.0%)
+--> Average epoch processing time (seconds):  121.608364
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   857.662880 | 1740.386178
+MSE in Void Space     0.159633   | 0.096570  
+Bias Error            91.909272  | 83.033753 
+Pearson Correlation   0.011690   | 0.014958  
+
+Executing epoch 220 / 1000 (22.0%)
+--> Average epoch processing time (seconds):  121.566612
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   14.933215  | 21.208133 
+MSE in Void Space     0.146982   | 0.083244  
+Bias Error            101.849898 | 104.604110
+Pearson Correlation   -0.080452  | -0.074610 
+--> New best solution for Validation dataset achieved at 225 / 1000: 17.54904845665241 (2.739790% better)
+--> New best solution for Validation dataset achieved at 226 / 1000: 14.737191705868161 (16.022845% better)
+
+Executing epoch 230 / 1000 (23.0%)
+--> Average epoch processing time (seconds):  121.761474
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   38.722081  | 67.686652 
+MSE in Void Space     0.138195   | 0.074862  
+Bias Error            90.318147  | 79.194339 
+Pearson Correlation   0.123999   | 0.115671  
+
+Executing epoch 240 / 1000 (24.0%)
+--> Average epoch processing time (seconds):  121.612404
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   48.965700  | 86.102069 
+MSE in Void Space     0.148922   | 0.084665  
+Bias Error            100.552004 | 102.707894
+Pearson Correlation   -0.007776  | -0.005307 
+
+Executing epoch 250 / 1000 (25.0%)
+--> Average epoch processing time (seconds):  121.48242
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   44.377809  | 110.544587
+MSE in Void Space     0.158554   | 0.091288  
+Bias Error            112.944395 | 129.988194
+Pearson Correlation   -0.099517  | -0.089114 
+
+Executing epoch 260 / 1000 (26.0%)
+--> Average epoch processing time (seconds):  121.356038
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   209.034134 | 437.182423
+MSE in Void Space     0.144943   | 0.085368  
+Bias Error            85.821762  | 72.478398 
+Pearson Correlation   0.073875   | 0.056399  
+
+Executing epoch 270 / 1000 (27.0%)
+--> Average epoch processing time (seconds):  121.245086
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   204.735858 | 394.891620
+MSE in Void Space     0.173324   | 0.105239  
+Bias Error            106.579939 | 116.621290
+Pearson Correlation   -0.045173  | -0.037238 
+
+Executing epoch 280 / 1000 (28.0%)
+--> Average epoch processing time (seconds):  121.136378
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   35.662769  | 67.049536 
+MSE in Void Space     0.142522   | 0.080123  
+Bias Error            100.065426 | 100.520506
+Pearson Correlation   0.070872   | 0.073065  
+
+Executing epoch 290 / 1000 (29.0%)
+--> Average epoch processing time (seconds):  121.0324
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   59.535059  | 106.260020
+MSE in Void Space     0.142727   | 0.083816  
+Bias Error            95.863948  | 98.188436 
+Pearson Correlation   0.016032   | 0.010087  
+
+Executing epoch 300 / 1000 (30.0%)
+--> Average epoch processing time (seconds):  120.940815
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   611.817192 | 1198.045453
+MSE in Void Space     0.165791   | 0.107409  
+Bias Error            103.497897 | 99.373469 
+Pearson Correlation   0.030939   | 0.025655  
+--> New best solution for Validation dataset achieved at 307 / 1000: 13.14292361818511 (10.817991% better)
+
+Executing epoch 310 / 1000 (31.0%)
+--> Average epoch processing time (seconds):  120.854864
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   629.692573 | 1405.442817
+MSE in Void Space     0.188571   | 0.133965  
+Bias Error            101.101843 | 104.342754
+Pearson Correlation   -0.016234  | -0.017826 
+
+Executing epoch 320 / 1000 (32.0%)
+--> Average epoch processing time (seconds):  120.776672
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   29.249930  | 50.732747 
+MSE in Void Space     0.147180   | 0.082506  
+Bias Error            103.618096 | 108.248229
+Pearson Correlation   -0.049946  | -0.020712 
+
+Executing epoch 330 / 1000 (33.0%)
+--> Average epoch processing time (seconds):  120.700349
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   27.411885  | 46.934655 
+MSE in Void Space     0.131323   | 0.071912  
+Bias Error            88.074634  | 78.036184 
+Pearson Correlation   0.261455   | 0.219743  
+
+Executing epoch 340 / 1000 (34.0%)
+--> Average epoch processing time (seconds):  120.628226
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   76.654358  | 164.346454
+MSE in Void Space     0.132250   | 0.071089  
+Bias Error            86.416576  | 74.485537 
+Pearson Correlation   0.195225   | 0.161771  
+
+Executing epoch 350 / 1000 (35.0%)
+--> Average epoch processing time (seconds):  120.557351
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   169.581848 | 373.045852
+MSE in Void Space     0.146952   | 0.079774  
+Bias Error            93.267814  | 91.210724 
+Pearson Correlation   0.018233   | 0.016193  
+
+Executing epoch 360 / 1000 (36.0%)
+--> Average epoch processing time (seconds):  120.491298
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   30.689791  | 52.778619 
+MSE in Void Space     0.134564   | 0.073406  
+Bias Error            90.422122  | 82.680332 
+Pearson Correlation   0.191868   | 0.165079  
+
+Executing epoch 370 / 1000 (37.0%)
+--> Average epoch processing time (seconds):  120.428082
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   19.371924  | 31.919270 
+MSE in Void Space     0.138542   | 0.074424  
+Bias Error            94.431350  | 91.759683 
+Pearson Correlation   0.139287   | 0.105132  
+
+Executing epoch 380 / 1000 (38.0%)
+--> Average epoch processing time (seconds):  120.368812
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   179.187913 | 453.781471
+MSE in Void Space     0.160732   | 0.106036  
+Bias Error            87.856683  | 78.183546 
+Pearson Correlation   0.032084   | 0.017035  
+--> New best solution for Validation dataset achieved at 386 / 1000: 11.37521086067989 (13.449920% better)
+
+Executing epoch 390 / 1000 (39.0%)
+--> Average epoch processing time (seconds):  120.310938
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   36.453685  | 75.727015 
+MSE in Void Space     0.137957   | 0.078362  
+Bias Error            92.619638  | 89.856420 
+Pearson Correlation   0.103951   | 0.074380  
+
+Executing epoch 400 / 1000 (40.0%)
+--> Average epoch processing time (seconds):  120.26052
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   10.567253  | 11.797263 
+MSE in Void Space     0.143805   | 0.077832  
+Bias Error            98.919341  | 98.659664 
+Pearson Correlation   0.125961   | 0.091712  
+
+Executing epoch 410 / 1000 (41.0%)
+--> Average epoch processing time (seconds):  120.210397
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   15.249380  | 21.238994 
+MSE in Void Space     0.141442   | 0.077485  
+Bias Error            98.254522  | 96.654490 
+Pearson Correlation   0.202319   | 0.189609  
+
+Executing epoch 420 / 1000 (42.0%)
+--> Average epoch processing time (seconds):  120.159826
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   107.407202 | 233.411533
+MSE in Void Space     0.139780   | 0.078163  
+Bias Error            95.997041  | 94.507164 
+Pearson Correlation   0.105192   | 0.087459  
+
+Executing epoch 430 / 1000 (43.0%)
+--> Average epoch processing time (seconds):  120.116756
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   50.813063  | 119.856955
+MSE in Void Space     0.133785   | 0.072779  
+Bias Error            87.325660  | 77.653336 
+Pearson Correlation   0.163277   | 0.153782  
+
+Executing epoch 440 / 1000 (44.0%)
+--> Average epoch processing time (seconds):  120.073011
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   13.349370  | 18.062738 
+MSE in Void Space     0.133481   | 0.074400  
+Bias Error            90.879697  | 84.514133 
+Pearson Correlation   0.301007   | 0.276820  
+
+Executing epoch 450 / 1000 (45.0%)
+--> Average epoch processing time (seconds):  120.032253
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   112.539534 | 238.179000
+MSE in Void Space     0.134090   | 0.073155  
+Bias Error            80.943443  | 63.873156 
+Pearson Correlation   0.089088   | 0.085806  
+
+Executing epoch 460 / 1000 (46.0%)
+--> Average epoch processing time (seconds):  119.99279
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   13.881001  | 17.517658 
+MSE in Void Space     0.142221   | 0.078006  
+Bias Error            99.172795  | 98.217975 
+Pearson Correlation   0.151401   | 0.107592  
+
+Executing epoch 470 / 1000 (47.0%)
+--> Average epoch processing time (seconds):  119.954943
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   117.321990 | 266.330924
+MSE in Void Space     0.173628   | 0.106361  
+Bias Error            119.506198 | 134.602511
+Pearson Correlation   -0.081013  | -0.063481 
+
+Executing epoch 480 / 1000 (48.0%)
+--> Average epoch processing time (seconds):  119.914157
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   284.219669 | 545.448889
+MSE in Void Space     0.134816   | 0.077292  
+Bias Error            86.095801  | 81.685636 
+Pearson Correlation   0.098466   | 0.074765  
+
+Executing epoch 490 / 1000 (49.0%)
+--> Average epoch processing time (seconds):  119.880713
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   10.542504  | 11.592254 
+MSE in Void Space     0.139156   | 0.075033  
+Bias Error            95.340371  | 92.185603 
+Pearson Correlation   0.279601   | 0.256996  
+
+Executing epoch 500 / 1000 (50.0%)
+--> Average epoch processing time (seconds):  119.849448
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   278.479923 | 609.515701
+MSE in Void Space     0.152974   | 0.094448  
+Bias Error            103.063074 | 112.200661
+Pearson Correlation   0.016253   | 0.011496  
+
+Executing epoch 510 / 1000 (51.0%)
+--> Average epoch processing time (seconds):  119.818408
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   11.363407  | 13.012460 
+MSE in Void Space     0.146038   | 0.082419  
+Bias Error            101.534295 | 104.976574
+Pearson Correlation   -0.060936  | -0.056730 
+
+Executing epoch 520 / 1000 (52.0%)
+--> Average epoch processing time (seconds):  119.787188
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   84.822365  | 190.217633
+MSE in Void Space     0.131795   | 0.072593  
+Bias Error            85.924254  | 76.037214 
+Pearson Correlation   0.162878   | 0.150782  
+
+Executing epoch 530 / 1000 (53.0%)
+--> Average epoch processing time (seconds):  119.795285
+--> Back-Propagated Loss for trainning vs validation data:
+Loss Name             Train      | Valid     
+----------------------------------------------
+MSE                   27.623831  | 60.655221 
+MSE in Void Space     0.133416   | 0.068537  
+Bias Error            87.998745  | 77.008694 
+Pearson Correlation   0.211714   | 0.175449  

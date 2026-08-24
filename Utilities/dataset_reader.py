@@ -1,9 +1,13 @@
 import torch
 import numpy as np
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, ConcatDataset
 import torch.nn as nn
 from Utilities import loader_handler as lc
 import warnings
+        
+from torch.utils.data import Dataset
+import h5py
+
 
 #######################################################
 #**** CUSTOMIZATION TO DEAL WITH MS-Net **************#
@@ -76,7 +80,7 @@ class MultiScaleDataset(Dataset):
             if transform_input is not None:
                 new_input_i_scales = []
                 for input_i_scale in input_i_scales:
-                    new_input_i_scales.append( transform_target(input_i_scale) )
+                    new_input_i_scales.append( transform_input(input_i_scale) )
                 scaled_input_tensors.append(new_input_i_scales)
             else:
                 scaled_input_tensors.append(input_i_scales)
@@ -98,9 +102,7 @@ class MultiScaleDataset(Dataset):
         return dataloader
 
         
-        
-from torch.utils.data import Dataset
-import h5py
+
 
 class LazyDatasetTorch(Dataset):
     """
@@ -115,7 +117,7 @@ class LazyDatasetTorch(Dataset):
         self.list_ids       = list_ids
         self.x_dtype        = x_dtype
         self.y_dtype        = y_dtype
-        self.uni_directional= None
+        self.component= 4
         self._validate_file()
         
     def _validate_file(self):
@@ -174,7 +176,7 @@ class LazyDatasetTorch(Dataset):
             edt         = f["edt"][sample_indices]
             n_valid     = f["n_valid"][sample_indices]
             
-            if self.uni_directional == 0:
+            if self.component == 0:
                 # Load batch data
                 vel_z       = f["vel_z"][sample_indices]
             
@@ -202,7 +204,7 @@ class LazyDatasetTorch(Dataset):
                 Y        = vel_z_3d.unsqueeze(1)
                 del vel_z_3d
                 
-            elif self.uni_directional == 1:
+            elif self.component == 1:
                 # Load batch data
                 vel_y       = f["vel_y"][sample_indices]
                 # Create solid regions
@@ -229,7 +231,7 @@ class LazyDatasetTorch(Dataset):
                 # Delete data after using
                 del vel_y_3d
                 
-            elif self.uni_directional == 2:
+            elif self.component == 2:
                 # Load batch data
                 vel_x       = f["vel_x"][sample_indices]
 
@@ -257,7 +259,7 @@ class LazyDatasetTorch(Dataset):
                 # Delete data after using
                 del vel_x_3d
                 
-            elif self.uni_directional == 3:
+            elif self.component == 3:
                 # Load batch data
                 press       = f["press"][sample_indices]
 
@@ -284,7 +286,7 @@ class LazyDatasetTorch(Dataset):
                 Y       = press_3d.unsqueeze(1)
                 # Delete data after using
                 del press_3d
-            elif self.uni_directional == 4:
+            elif self.component == 4:
                 # Load batch data
                 vel_z = vel_y = vel_x = None 
                 vel_z       = f["vel_z"][sample_indices]
@@ -364,6 +366,39 @@ class LazyDatasetTorch(Dataset):
                 del vel_z_3d, vel_y_3d, vel_x_3d, press_3d
 
         return X,Y
-        
 
+
+class MultiLazyDatasetTorch(Dataset):
+   
+    def __init__(self, h5_paths, x_dtype=torch.float32, y_dtype=torch.float32):
+
+        self.h5_paths = h5_paths
+        self.datasets = []
+        
+        for i, path in enumerate(self.h5_paths):
+            dataset = LazyDatasetTorch(
+                h5_path=path,
+                list_ids=None,
+                x_dtype=x_dtype,
+                y_dtype=y_dtype
+            )
+            self.datasets.append(dataset)
+            
+        self.combined_dataset = ConcatDataset(self.datasets)
+
+    def __len__(self):
+        return len(self.combined_dataset)
+
+    def __getitem__(self, idx):
+        return self.combined_dataset[idx]
+
+    @property
+    def component(self):
+        return self.datasets[0].component if self.datasets else None
+
+    @component.setter
+    def component(self, value):
+        
+        for ds in self.datasets:
+            ds.component = value
     

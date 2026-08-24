@@ -1,0 +1,51 @@
+{
+    "model_name": "danny_p",
+    "binary_input": true,
+    "NN_dataset_folder": "../NN_Datasets/",
+    "dataset_train_name": "PressureDriven/Train_Danny_120_120_120_Pressure.h5",
+    "dataset_valid_name": "PressureDriven/Train_Danny_120_120_120_Pressure.h5",
+    "train_range": [
+        0,
+        6
+    ],
+    "valid_range": [
+        6,
+        7
+    ],
+    "batch_size": 8,
+    "num_workers": 4,
+    "num_threads": 18,
+    "N_epochs": 30000,
+    "partial_epochs": 30000,
+    "patience": 6000,
+    "learning_rate": 0.0006,
+    "earlyStopping_loss": "MSE",
+    "backPropagation_loss": "MSE",
+    "optimizer": "ADAM",
+    "weight_init": null,
+    "seed": 42,
+    "train_comment": "Testando dataset Danny simulado - PRESSAO SEM PAREDES",
+    "NN_results_folder": "/home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_24_March_2026_03-59PM_Job16921/",
+    "loss_functions": {
+        "MSE": {
+            "Thresholded": false,
+            "obj": "MSELoss()"
+        },
+        "MSE in Void Space": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): MSELoss()\n)"
+        },
+        "Mean Perm. Relative Error": {
+            "Thresholded": true,
+            "obj": "PRPE()"
+        },
+        "Pearson Correlation": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): PearsonCorr()\n)"
+        },
+        "Inv. Corr": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): PearsonCorr()\n)"
+        }
+    }
+}

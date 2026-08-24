@@ -13,7 +13,7 @@ from matplotlib.ticker import PercentFormatter
 from   scipy.ndimage import distance_transform_edt
 
 
-def Plot_Velocity_Front_Comparison(datasets, sample_idx=0, slice_idx=60, vel_channel=0, save_mode=False, save_tag=""):
+def Plot_Velocity_Front_Comparison(datasets, sample_idx=0, slice_idx=60, component=0, save_mode=False, save_tag=""):
     """
     Plots a slice of the velocity field side-by-side (Front View) with Flux Annotation.
     """
@@ -22,7 +22,7 @@ def Plot_Velocity_Front_Comparison(datasets, sample_idx=0, slice_idx=60, vel_cha
     
     if num_plots == 1: axes = [axes]
         
-    comp_name = {0: "Uz", 1: "Uy", 2: "Ux"}.get(vel_channel, f"Ch {vel_channel}")
+    comp_name = {0: "Uz", 1: "Uy", 2: "Ux"}.get(component, f"Ch {component}")
     folder = "Velocity_Front_Comparison_" + save_tag
     if save_mode and not os.path.exists(folder): 
         os.makedirs(folder)
@@ -31,7 +31,7 @@ def Plot_Velocity_Front_Comparison(datasets, sample_idx=0, slice_idx=60, vel_cha
         _, targets = ds[sample_idx]
         targets = targets.numpy()
         
-        vel_slice = targets[vel_channel, slice_idx, :, :]
+        vel_slice = targets[component, slice_idx, :, :]
         vel_masked = np.ma.masked_where(vel_slice == 0, vel_slice)
         
         cmap = plt.colormaps["plasma"].copy()
@@ -69,7 +69,7 @@ def Plot_Velocity_Front_Comparison(datasets, sample_idx=0, slice_idx=60, vel_cha
         plt.show()
 
 
-def Plot_Velocity_Side_Comparison(datasets, sample_idx=0, slice_idx=60, vel_channel=0, save_mode=False, save_tag=""):
+def Plot_Velocity_Side_Comparison(datasets, sample_idx=0, slice_idx=60, component=0, save_mode=False, save_tag=""):
     """
     Plots a slice of the velocity field side-by-side for all datasets (Side View).
     """
@@ -78,7 +78,7 @@ def Plot_Velocity_Side_Comparison(datasets, sample_idx=0, slice_idx=60, vel_chan
     
     if num_plots == 1: axes = [axes]
         
-    comp_name = {0: "Uz", 1: "Uy", 2: "Ux"}.get(vel_channel, f"Ch {vel_channel}")
+    comp_name = {0: "Uz", 1: "Uy", 2: "Ux"}.get(component, f"Ch {component}")
     folder = "Velocity_Side_Comparison_" + save_tag
     if save_mode and not os.path.exists(folder): 
         os.makedirs(folder)
@@ -88,7 +88,7 @@ def Plot_Velocity_Side_Comparison(datasets, sample_idx=0, slice_idx=60, vel_chan
         targets = targets.numpy()
         
         # Slice along the X-axis (Width)
-        vel_slice = targets[vel_channel, :, :, slice_idx]
+        vel_slice = targets[component, :, :, slice_idx]
         
         vel_masked = np.ma.masked_where(vel_slice == 0, vel_slice)
         cmap = plt.colormaps["plasma"].copy()
@@ -269,22 +269,23 @@ def Compare_Permeability(
 dataset_folder = "../NN_Datasets/"
 
 # Comparar reconstrucao dados baseline
-"""
-dataset_names = [
-    "Train_Original_Danny_noAug.h5", 
-    "PressureDriven/Train_Danny_120_120_120_PressureWalls.h5",
-    "ForceDriven/Train_Danny_120_120_120_Force.h5"
-]
-"""
+#"""
+datasets = {
+    #"Train_Original_Danny_noAug.h5", 
+    "PW": "PressureDriven/Train_Danny_120_120_120_PressureWalls.h5",
+    "P": "PressureDriven/Train_Danny_120_120_120_Pressure.h5",
+    #"ForceDriven/Train_Danny_120_120_120_Force.h5"
+}
+#"""
 
-
+"""
 datasets        = {
     #"Spherical Pore":   "ForceDriven/Test_SphPore_120_120_120.h5",
     #"Spherical Grain":  "ForceDriven/Test_CylinGrain_120_120_120.h5",
     #"Cylindrical Pore": "ForceDriven/Test_CylinPore_120_120_120.h5",
     #"Cylindrical Grain":"ForceDriven/Test_CylinGrain_120_120_120.h5",
     
-    "Parker":       "ForceDriven/Test_Oliveira_Parker_120_120_120.h5",
+    #"Parker":       "ForceDriven/Test_Oliveira_Parker_120_120_120.h5",
     #"Leopard":      "ForceDriven/Test_Oliveira_Leopard_120_120_120.h5",
     #"Kirby":        "ForceDriven/Test_Oliveira_Kirby_120_120_120.h5",
     #"Castle Gate":  "ForceDriven/Test_Oliveira_CastleGate_120_120_120.h5",
@@ -296,11 +297,11 @@ datasets        = {
     #"Bentheimer":   "ForceDriven/Test_Oliveira_Bentheimer_120_120_120.h5",
     #"Bandera":      "ForceDriven/Test_Oliveira_Bandera_120_120_120.h5",
     }
-
+"""
 
 # The specific sample indices you want to analyze
 samples_to_plot = [0, 1, 2] 
-
+component = 3
 
 #######################################################
 #************ INITIALIZE DATASETS         ************#
@@ -319,26 +320,28 @@ for ds_name, ds_path in datasets.items():
 #######################################################
 #****** SAMPLE-BY-SAMPLE VEL. Field ANALYSIS   *******#
 #######################################################
-"""
+#"""
 for sample_idx in samples_to_plot:
     print(f"Generating Side-by-Side Plots for Sample {sample_idx}...")
     
-    # Compare Uz (vel_channel=0) Front View
+    # Compare Uz (component=0) Front View
     Plot_Velocity_Front_Comparison(
         datasets=datasets_data, 
         sample_idx=sample_idx, 
         slice_idx=60, 
         save_mode=True, 
+        component=component,
     )
     
-    # Compare Uz (vel_channel=0) Side View
+    # Compare Uz (component=0) Side View
     Plot_Velocity_Side_Comparison(
         datasets=datasets_data, 
         sample_idx=sample_idx, 
         slice_idx=60, 
         save_mode=True, 
+        component=component,
     )
-"""
+#"""
 #######################################################
 #****** SAMPLE-BY-SAMPLE HISTOGRAM ANALYSIS   ********#
 #######################################################
@@ -354,8 +357,9 @@ Compare_Histograms(
 #######################################################
 #****** SAMPLE-BY-SAMPLE PERMEABILITY ANALYSIS  ******#
 #######################################################
+"""
 Compare_Permeability(
         datasets_data,
         samples_to_plot,
 )
-
+"""

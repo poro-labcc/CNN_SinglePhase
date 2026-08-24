@@ -11,10 +11,6 @@
 #SBATCH --error=error_%j.log
 
 
-#SBATCH --cpus-per-task=20          # CPUs for your Python process
-#SBATCH --mem=40G                   # Total RAM for the job
-
-##SBATCH --oversubscribe  	               # Allow sharing
 
 # ---------------- Environment Setup ----------------
 
@@ -24,5 +20,4 @@ conda activate env_cuda
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH # Makes the paths from conda environment visible
 # ---------------- Job Execution --------------------
 
-# Run the simulation using MPI with 4 processes
-python -u main_TrainModel.py
+python main_TestModel_Quant.py

@@ -1,0 +1,51 @@
+{
+    "model_name": "javier_p",
+    "binary_input": false,
+    "NN_dataset_folder": "../NN_Datasets/",
+    "dataset_train_name": "PressureDriven/Train_Danny_120_120_120_Pressure_Aug.h5",
+    "dataset_valid_name": "PressureDriven/Train_Danny_120_120_120_Pressure_Aug.h5",
+    "train_range": [
+        0,
+        216
+    ],
+    "valid_range": [
+        216,
+        242
+    ],
+    "batch_size": 8,
+    "num_workers": 4,
+    "num_threads": 18,
+    "N_epochs": 1000,
+    "partial_epochs": 1000,
+    "patience": 200,
+    "learning_rate": 0.0006,
+    "earlyStopping_loss": "MSE",
+    "backPropagation_loss": "MSE",
+    "optimizer": "ADAM",
+    "weight_init": null,
+    "seed": 42,
+    "train_comment": "Testando treinamento javier p.",
+    "NN_results_folder": "/home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_2_April_2026_06-18PM_Job17462/",
+    "loss_functions": {
+        "MSE": {
+            "Thresholded": false,
+            "obj": "MSELoss()"
+        },
+        "MSE in Void Space": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): MSELoss()\n)"
+        },
+        "Bias Error": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): MeanBiasError()\n)"
+        },
+        "Pearson Correlation": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): PearsonCorr()\n)"
+        },
+        "Inv. Corr": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): PearsonCorr()\n)"
+        }
+    }
+}

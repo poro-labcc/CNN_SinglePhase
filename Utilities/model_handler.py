@@ -47,10 +47,25 @@ def get_MB_storage_size(model):
 
 # Get the number of parameters for a model instance
 def get_n_trainable_params(model):
+    trainable_count = 0
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            trainable_count += param.numel()
+    return trainable_count
+            
+def get_n_non_trainable_params(model):
+    nontrainable_count = 0
+    for name, param in model.named_parameters():
+        if not param.requires_grad:
+            nontrainable_count += param.numel()
+    return nontrainable_count
+
+def get_total_params(model):
     count = 0
-    for param in model.parameters():
-        count += param.nelement()
+    for name, param in model.named_parameters():
+        count += param.numel()
     return count
+
 
 def print_cuda_mem(tag=""):
     """Print current CUDA allocated and reserved memory in MB (no-op if no CUDA)."""

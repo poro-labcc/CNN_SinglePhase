@@ -6,17 +6,62 @@ This repository provides a PyTorch-based training pipeline for developing deep l
 ---
 # About the models
 
-
+All the considered models are embbeded with nn.Module, and have the following neede structure:
+* predict(): method used as forward() during test or applications. This method disables gradient computation and mask the output according to the input's solid.
+* bin_input: attribute used to define the type of input. If True, thresholds the signal, if False let the input as it is.
+* The models are image-to-image, not receiving out predicting any extra type of features. All inputs and features must be encoded as image channels.
 
 ---
 # Training Process
 
+The training process can be execute for main_Train_subModel.py or main_Train_mainModel.py. Sub-models stands for training processes with end-to-end adjustments. Main-models are trained with sub-models fixed while others keep being adjusted.  
+
+## Usage and Execution
+
+The training pipeline is controlled via command-line arguments and reads hyperparameters from structured `.json` configuration files.
+
+### 1. Standard Training
+
+To start a new training process, provide a JSON configuration file.  
+If no file is specified, the script defaults to `config.json` in the root directory.
+
+**Example:**
+```bash
+python main_Train_subModel.py --config experiment_01.json
+```
+
+---
+
+### 2. Resuming an Experiment
+
+To resume a previous training session or reproduce an experiment, provide the target results directory.  
+
+This feature is particularly useful for:
+- Splitting long training runs into multiple executions  
+- Protecting against system interruptions or crashes  
+- Implementing curriculum learning strategies  
+
+The script automatically loads the `metadata.json` generated during the original run and ignores any `--config` file.
+
+**Example:**
+```bash
+python main_TrainModel.py --folder ../NN_Results/NN_Trainning_23_March_2026_01-46PM
+```
+
+---
+
+## Configuration Parameters
+
+The `config.json` file controls all aspects of the model, dataset handling, and training process.
+
+### General Structure
 
 ## Configuration Parameters
 
 The following variables controls all aspects of the model, dataset handling, and training process.
 
 ```json
+{
     "model_name": "danny_z",
     "binary_input": true,
     "NN_dataset_folder": "../NN_Datasets/",
@@ -37,6 +82,7 @@ The following variables controls all aspects of the model, dataset handling, and
     "weight_init": null,
     "seed": 42,
     "train_comment": "Description of the current experiment."
+}
 ```
 
 ---
@@ -136,8 +182,22 @@ main_TrainModel.py
 
 ---
 # Validation Process
+The validation process assesses the model's ability to generalize to new, unseen geometries, ensuring it has learned the underlying physics of the flow rather than just memorizing training data. The models are tested on out-of-distribution (OOD) domains limited to $120^3$ voxels, including synthetic geometries (e.g., spherical/cylindrical pores and grains) and real micro-CT rock images (e.g., Parker, Leopard, Kirby, Brown, Upper Gray, Sinter Gray, Bentheimer, Berea, Berea Buff, Castlegate, Bandera).
 
 ## Quantitative analysis
+The quantitative evaluation relies on several physical and statistical metrics computed voxel-by-voxel or spatially averaged, comparing the Neural Network surrogate predictions against the Lattice Boltzmann Method (LBM) baselines:
 
+* **Permeability Error ($e_k$)**: Evaluates the relative error in the predicted macroscopic permeability by comparing the spatial average of the velocity in the main flow direction.
+* **Flow Residual ($e_f$)**: Measures global mass conservation by computing the L1 error of the flux across planes in the $x$, $y$, and $z$ directions.
+* **Residual Divergence ($e_d$)**: Acts as a metric for point-wise mass conservation by evaluating the divergence of the predicted velocity field.
+* **Tortuosity Error ($e_t$)**: Calculates the discrepancy in the predicted tortuosity of the flow pathways, a vital property for rock characterization.
+* **Pearson Correlation Coefficient ($\sigma$)**: Statistically evaluates the spatial coherence and linear correlation between the predicted and true velocity fields.
+* **Magnitude Error ($e_m$)**: Measures the local absolute error exclusively in regions where the velocity is above the sample's average, focusing on the main fluid channels.
+* **Angular Error ($e_\theta$)**: Evaluates the directional alignment by computing the angle between the 3D velocity vectors of the prediction and the ground truth.
 
 ## Qualitative analysis
+The qualitative analysis involves a visual inspection of the 3D velocity fields to determine the model's physical coherence:
+
+* **Frontal Views**: Used to analyze the interaction between the fluid and the solid matrix, particularly checking boundary conditions at the walls.
+* **Superior (Top) Views**: Evaluated to observe the continuity of the flow, making it easier to identify the model's handling of preferred flow pathways, constrictions, bifurcations, and ramifications.
+

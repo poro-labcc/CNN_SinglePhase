@@ -1,0 +1,52 @@
+
+    ================= TRAINING METADATA =================
+    
+    Model Aspects:
+    - model_name:           danny_y
+    - model weigth init:    None
+    - binary input:         True
+    
+    Data Aspects:
+    - NN_dataset_folder:    ../NN_Datasets/
+    - dataset_train_name:   PressureDriven/Train_Danny_120_120_120_PressureWalls_Aug.h5
+    - dataset_valid_name:   PressureDriven/Train_Danny_120_120_120_PressureWalls_Aug.h5
+    - batch_size:           8
+    
+    Learning Aspects:
+    - N_epochs:             1000
+    - patience:             200
+    - learning_rate:        0.0006
+    - optimizer:            ADAM
+    - earlyStopping_loss:   MSE
+    - backPropagation_loss: MSE
+    
+    Loss Functions:
+    {
+    "MSE": {
+        "Thresholded": false,
+        "obj": "MSELoss()"
+    },
+    "MSE in Void Space": {
+        "Thresholded": true,
+        "obj": "Mask_LossFunction(\n  (lossFunction): MSELoss()\n)"
+    },
+    "Mean Perm. Relative Error": {
+        "Thresholded": true,
+        "obj": "PRPE()"
+    },
+    "Pearson Correlation": {
+        "Thresholded": true,
+        "obj": "Mask_LossFunction(\n  (lossFunction): PearsonCorr()\n)"
+    }
+}
+    
+    Paths:
+    - NN_results_folder:        /home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_14_March_2026_03-14PM_Job16195/
+    - NN_model_weights_folder:  /home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_14_March_2026_03-14PM_Job16195/NN_Model_Weights/
+    - model_full_name:          /home/gabriel.silveira/dissertacao/NN_Results/NN_Trainning_14_March_2026_03-14PM_Job16195/NN_Model_Weights/danny_y
+    - dataset_train_full_name:  ../NN_Datasets/PressureDriven/Train_Danny_120_120_120_PressureWalls_Aug.h5
+    - dataset_valid_full_name:  ../NN_Datasets/PressureDriven/Train_Danny_120_120_120_PressureWalls_Aug.h5
+    
+    ======================================================
+    
+    Run_final

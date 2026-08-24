@@ -1,0 +1,55 @@
+{
+    "model_name": "danny_zyxp",
+    "binary_input": true,
+    "NN_dataset_folder": "../NN_Datasets/",
+    "dataset_train_name": "PressureDriven/Train_Danny_120_120_120_Pressure.h5",
+    "dataset_valid_name": "PressureDriven/Train_Danny_120_120_120_Pressure.h5",
+    "train_range": [
+        0,
+        6
+    ],
+    "valid_range": [
+        6,
+        8
+    ],
+    "batch_size": 8,
+    "num_workers": 4,
+    "num_threads": null,
+    "N_epochs": 30000,
+    "partial_epochs": 30000,
+    "patience": 6000,
+    "learning_rate": 0.001,
+    "earlyStopping_loss": "PI-MSE",
+    "backPropagation_loss": "PI-MSE",
+    "optimizer": "ADAM",
+    "weight_init": "none",
+    "seed": 42,
+    "train_comment": "Testando treinamento XYZP.",
+    "NN_results_folder": "/home/jovyan/privado/NN_Results/NN_Trainning_11_April_2026_01-39PM(1)/",
+    "loss_functions": {
+        "PI-MSE": {
+            "Thresholded": false,
+            "obj": "MSE_Divergent(\n  (div): Divergent()\n  (mse): MSELoss()\n)"
+        },
+        "MSE": {
+            "Thresholded": false,
+            "obj": "MSELoss()"
+        },
+        "MSE in Void Space": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): MSELoss()\n)"
+        },
+        "Divergent": {
+            "Thresholded": true,
+            "obj": "Divergent()"
+        },
+        "Bias Error": {
+            "Thresholded": true,
+            "obj": "MeanBiasError()"
+        },
+        "Inv. Corr": {
+            "Thresholded": true,
+            "obj": "Mask_LossFunction(\n  (lossFunction): PearsonCorr()\n)"
+        }
+    }
+}
